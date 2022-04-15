@@ -2,6 +2,10 @@ import pymongo
 import json
 import configs
 import sys
+import time
+from datetime import datetime
+
+
 
 def Insert_Telegram_Interaction(conv):
     Mongo_client = pymongo.MongoClient(configs.MongoT_Client)
@@ -12,6 +16,7 @@ def Insert_Telegram_Interaction(conv):
 
     #print(myclient.list_database_names())
     #print(mydb.list_collection_names())
+
 
 if __name__ == "__main__":
     print("Executing the main")

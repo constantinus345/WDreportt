@@ -22,27 +22,35 @@ import configs
 """
 def give_work_link_name(Telegram_ID):
     dfx= read_all_table_profiles()
+    dfx = dfx.drop_duplicates(subset= "Link", keep="last")
     #print(dfx.columns.tolist())
+    #print(len(dfx))
     df_work = read_all_table_workallocation()
     #print(len(df_work))
     #print(df_work)
     df_work_columns_list = df_work.columns.tolist()
     #print(df_work_columns_list)
-    for x in range(len(dfx)):
-        links= tuple(dfx['Link'])
-        link_random = random.choice(links)
-        #print(link_random)
-        index_link = links.index(link_random)
-        #print(index_link)
+    links= dfx['Link'].tolist()
 
+    for x in range(len(dfx)):
+        link_random = random.choice(links)
+        #print(x,"  ",len(links))
+        #print(link_random)
+        index_link = dfx['Link'].tolist().index(link_random)
+        links = [x for x in links if x!= link_random]
+        #print(index_link)
         #boolean- checks if [Telegram_ID, link_random] combination already allocated
+        #print(type(df_work["telegramid"][0]))
         Work_Check= ((df_work["telegramid"]== Telegram_ID) & (df_work["link_report"]== link_random)).any()
-        if Work_Check:
-            continue
+        #print(Work_Check)
+        #print(Telegram_ID, link_random)
+        if Work_Check == True:
+            continue    
         else:
             #print(datetime.now())
             df_work_one = pd.DataFrame( columns= df_work_columns_list)
             df_work_one.loc[0]=[datetime.now(), Telegram_ID, link_random]
+            #print(df_work_one.loc[0])
             with engine.connect() as conn:
                 df_work_one.to_sql(f'{configs.Table_2}', con=conn, if_exists="append",index=False)
             break
@@ -52,4 +60,6 @@ def give_work_link_name(Telegram_ID):
     #print(name)
     return [link_random, name, comments]
 
-print(give_work_link_name(configs.Telegram_ID_C))
+#print(give_work_link_name(configs.Telegram_ID_C))
+
+#print(give_work_link_name(801734855))

@@ -10,7 +10,7 @@ creds = service_account.Credentials.from_service_account_file(filename=configs.J
 translate_client = translate.Client(credentials=creds)
 
 
-def translate_text(target_language, text, source_language):
+def translate_text(target_language, text, source_language=None):
     """Translates text into the target_language language.
 
     Target must be an ISO 639-1 language code.
